@@ -2,9 +2,9 @@ package PlayersIcon;
 
 import java.util.stream.IntStream;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class PathPane extends javafx.scene.layout.Pane {
@@ -14,29 +14,18 @@ public class PathPane extends javafx.scene.layout.Pane {
     public PathPane(int x, int y, int radius) {
         PathPlayer.setShape(radius);
         getChildren().addAll(
-                new PathPlayer(radius, true),
-                new PathPlayer(radius, false),
-                new PathPlayer(radius, false),
-                new PathPlayer(radius, false)
+                new PathPlayer(Color.RED, true),
+                new PathPlayer(Color.GREEN, false),
+                new PathPlayer(Color.YELLOW, false),
+                new PathPlayer(Color.BLUE, false)
         );
         setPrefSize(radius * 2, radius * 2);
-        //setStyle("-fx-background-color: purple");
+        setLayoutX(100);
+        setLayoutY(100);
     }
 
     public PathPlayer getPathPlayer(int number) {
         return (PathPlayer) getChildren().get(number);
-    }
-
-    public int getNumber() {
-        return indexs;
-    }
-
-    public void addPlayer() {
-        indexs += 1;
-    }
-
-    public void removePlayer() {
-        indexs -= 1;
     }
 
     public void animus(Button button, Button button2, Timeline timeline, int range, int number, int add, boolean plus) {
@@ -47,6 +36,7 @@ public class PathPane extends javafx.scene.layout.Pane {
                                 Duration.millis(index * 10), event -> {
                             getPathPlayer(number).getElements().clear();
                             getPathPlayer(number).getElements().addAll(PathPlayer.list_of_shape.get(index + add).getElements());
+                            getPathPlayer(number).setFill(getPathPlayer(number).getColor());
                         }
                         )
                 )
@@ -57,13 +47,7 @@ public class PathPane extends javafx.scene.layout.Pane {
             timeline.setRate(-1);
         }
         timeline.setOnFinished(t3 -> {
-            button.setDisable(false);
-            button2.setDisable(false);
-            if (plus) {
-                indexs += 1;
-            } else {
-                indexs -= 1;
-            }
+            setIndex(plus, button, button2);
         });
     }
 
@@ -74,44 +58,41 @@ public class PathPane extends javafx.scene.layout.Pane {
         }
         switch (indexs) {
             case 0 -> {
-                //      getPathPlayer(0).changeColor(color);
-                timeline.getKeyFrames().addAll(new KeyFrame(Duration.ZERO, new KeyValue(getPathPlayer(0).opacityProperty(), 0)),
-                        new KeyFrame(Duration.seconds(1), new KeyValue(getPathPlayer(0).opacityProperty(), 1)));
-                button.setDisable(true);
-                button2.setDisable(true);
-                if (!plus) {
-                    timeline.setRate(-1);
-                }
-                System.out.println(timeline.getRate());
-                timeline.setOnFinished(t3 -> {
-                    button.setDisable(false);
-                    button2.setDisable(false);
-                    if (plus) {
-                        indexs += 1;
-                    } else {
-                        indexs -= 1;
-                    }
-                });
+                animus(button, button2, timeline, 361, 0, 0, plus);
                 break;
             }
             case 1 -> {
-                //    getPathPlayer(1).changeColor(color);
                 animus(button, button2, timeline, 181, 1, 0, plus);
                 break;
             }
             case 2 -> {
-                //      getPathPlayer(2).changeColor(color);
                 animus(button, button2, timeline, 121, 2, 0, plus);
                 animus(button, button2, timeline, 61, 1, 180, plus);
                 break;
             }
-            default -> {
-                //         getPathPlayer(3).changeColor(color);
+            case 3 -> {
                 animus(button, button2, timeline, 91, 3, 0, plus);
                 animus(button, button2, timeline, 61, 2, 120, plus);
                 animus(button, button2, timeline, 31, 1, 240, plus);
             }
         }
         timeline.play();
+    }
+
+    private void setIndex(boolean isPlus, Button plus, Button minus) {
+        if (isPlus) {
+            indexs += 1;
+        }
+        if (isPlus) {
+            minus.setDisable(false);
+            if (indexs < 4) {
+                plus.setDisable(false);
+            }
+        } else {
+            plus.setDisable(false);
+            if (indexs > 0) {
+                minus.setDisable(false);
+            }
+        }
     }
 }

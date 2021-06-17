@@ -10,6 +10,7 @@ import javafx.scene.shape.Path;
 public final class PathPlayer extends javafx.scene.shape.Path {
 
     static ArrayList<Path> list_of_shape = new ArrayList<>();
+    private final Color color;
 
     protected static void setShape(int radius) {
         var moveToStart = new MoveTo(radius, radius);
@@ -30,14 +31,15 @@ public final class PathPlayer extends javafx.scene.shape.Path {
         }
     }
 
-    public PathPlayer(int radius, boolean first) {
+    public PathPlayer(Color color, boolean first) {
         if (first) {
             getElements().addAll(list_of_shape.get(360).getElements());
         }
         setStrokeWidth(0);
+        this.color = color;
     }
 
-    public void changeColor(Color color) {
-        setFill(color);
+    public Color getColor() {
+        return color;
     }
 }
