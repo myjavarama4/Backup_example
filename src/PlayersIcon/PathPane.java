@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-public class PathPane extends javafx.scene.layout.Pane {
+public final class PathPane extends javafx.scene.layout.Pane {
 
     private int indexs = 0;
 
